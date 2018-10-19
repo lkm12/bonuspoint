@@ -1,0 +1,35 @@
+version: '3.0'
+services:
+  # 注册中心
+  eureka:
+    image: registry.cn-hangzhou.aliyuncs.com/fuzamei/eureka
+    restart: always
+    tty: true
+    container_name: eureka
+    ports:
+    - "1111:1111"
+  # 配置中心
+  config:
+    image: registry.cn-hangzhou.aliyuncs.com/fuzamei/config
+    restart: always
+    tty: true
+    container_name: config
+    ports:
+    - "8888:8888"
+    depends_on:
+    - eureka
+  # 积分服务
+  bonuspoint:
+    image: registry.cn-hangzhou.aliyuncs.com/fuzamei/bonuspoint
+    restart: always
+    tty: true
+    container_name: bonuspoint
+    ports:
+    - "9001:9001"
+    depends_on:
+    - eureka
+    - config
+    volumes:
+    - ${HOME}/bonuspoint/logs:/logs
+
+

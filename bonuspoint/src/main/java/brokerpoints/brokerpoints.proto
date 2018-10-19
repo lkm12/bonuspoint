@@ -1,0 +1,511 @@
+syntax = "proto3";
+package brokerpoints;
+
+enum ActionType {
+    Error = 0;
+	//创建总平台（总平台唯一，只在系统初始化时调用一次）
+	CreateTPlatform = 1;
+	//创建平台
+	CreatePlatform = 2;
+	//创建商户
+	CreateMerchant = 3;
+	//用户注册
+	UserRegister = 4;
+	//设置平台和商户备付金比率
+    SetCashRate = 5;
+	//设置平台和商户积分兑换比率
+	SetPointRate = 6;
+	//商户，平台，总平台存取款
+	AccessCash = 7;
+	//发行商户积分
+	CreateMerchantPoint = 8;
+	//使商户积分过期
+	ExpirePoints = 9;
+	//向用户发放积分
+	GiveUserPoints = 10;
+	//用商户积分兑换所在平台通用积分
+	MerchantToGeneral = 11;
+	//平台积分兑换总平台积分
+	GeneralToTGeneral = 12;
+	//总平台积分兑换平台积分
+	TGeneralToGeneral = 13;
+	//购买商品
+	BuyCommodity = 14;
+	//商户结算通用积分
+	SellGeneralPoints = 15;
+	//用户之间转积分
+	TransferPoints = 16;
+	//平台给商户发放通用积分
+	GiveMerchantGPoints = 17;
+	Count = 18;
+}
+
+//区块链写数据
+message PointsAction {
+    oneof value{
+		//创建总平台（总平台唯一，只在系统初始化时调用一次）
+		PointsCreateTPlatform createTPlatform = 1;
+		//创建平台
+		PointsCreatePlatform createPlatform = 2;
+		//创建商户
+		PointsCreateMerchant createMerchant = 3;
+		//用户注册
+		PointsUserRegister userRegister = 4;
+		//设置平台和商户备付金比率
+    	PointsSetCashRate setCashRate = 5;
+		//设置平台和商户积分兑换比率
+		PointsSetPointRate setPointRate = 6;
+		//商户，平台，总平台存取款
+		PointsAccessCash accessCash = 7;
+		//发行商户积分
+		PointsCreateMerchantPoint createMerchantPoint = 8;
+		//使商户积分过期
+		PointsExpirePoints expirePoints = 9;
+		//向用户发放积分
+		PointsGiveUserPoints giveUserPoints = 10;
+		//用商户积分兑换所在平台通用积分
+		PointsMerchantToGeneral merchantToGeneral = 11;
+		//平台积分兑换总平台积分
+		PointsGeneralToTGeneral generalToTGeneral = 12;
+		//总平台积分兑换平台积分
+		PointsTGeneralToGeneral tgeneralToGeneral = 13;
+		//购买商品
+		PointsBuyCommodity buyCommodity = 14;
+		//商户结算通用积分
+		PointsSellGeneralPoints sellGeneralPoints = 15;
+		//用户之间转积分
+		PointsTransferPoints transferPoints = 16;
+		//平台给商户发放通用积分
+		PointsGiveMerchantGPoints giveMerchantGPoints = 17;
+	}
+	//ActionType
+    int32 ty = 18;
+}
+
+//创建总平台
+message PointsCreateTPlatform {
+}
+
+//创建平台
+message PointsCreatePlatform {
+	//平台id
+	string id = 1;
+	//备付金比率
+	string cashRate = 2;
+	//商户积分兑换比率
+	string pointRate = 3;
+}
+
+//创建商户
+message PointsCreateMerchant {
+	//商户id
+	string id = 1;
+	//商户所在平台id
+	string platformId = 2;
+	//备付金比率
+	string cashRate = 3;
+	//商户积分兑换比率
+	string pointRate = 4;
+}
+
+//用户注册
+message PointsUserRegister {
+	//用户id
+	string id = 1;
+}
+
+//设置商户和平台备付金比率
+message PointsSetCashRate {
+	//商户或平台id
+	string id = 1;
+	//备付金比率
+	string cashRate = 2;
+	//被设置对象账户类型（商户或平台）
+	AccountType accountType = 3;
+}
+
+//设置商户和平台积分兑换比率
+message PointsSetPointRate {
+	//商户或平台id
+	string id = 1;
+	//积分兑换比率
+	string pointRate = 2;
+	//被设置对象账户类型（商户或平台）
+	AccountType accountType = 3;
+}
+
+//存取款
+message PointsAccessCash {
+	//账户id
+	string id = 1;
+	//账户类型
+	AccountType accountType = 2;
+    //金额
+    string cash = 3;
+	//true:存款 false:取款
+	bool add = 4;
+}
+
+//商户发行新积分
+message PointsCreateMerchantPoint {
+	//商户id
+	string merchantId = 1;
+	//发行的积分的id
+	string pointId = 2;
+    //发行的积分数量
+    string points = 3;
+	//发行的积分到期时间（以秒计数的Unix时间）
+	int64 expiration = 4;
+}
+
+//使商户积分过期
+message PointsExpirePoints {
+	//商户id
+	string merchantId = 1;
+	//积分id
+	string pointId = 2;
+}
+
+//发放积分
+message PointsGiveUserPoints {
+	//积分发放者id
+	string id = 1;
+	//发放者账户类型（总平台，平台，商户）
+	AccountType accountType = 2;
+    //积分id(商户发放商户积分时需要指定积分id,平台和总平台发放通用积分时不需要)
+    string pointId = 3;
+	//积分过期时间(商户发放商户积分时需要商户积分过期时间,平台和总平台发放通用积分时不需要)
+    int64 expiration = 4;
+	//积分数量
+    string quantity = 5;
+	//获得发放积分的用户id
+	string userId = 6;
+}
+
+//用商户积分兑换所在平台（仅限商户所在平台）通用积分
+message PointsMerchantToGeneral{
+	//兑换者（商户或用户）id
+	string id = 1;
+	//兑换者账户类型
+	AccountType accountType = 2;
+	//商户id
+	string merchantId = 3;
+    //用掉的商户积分
+    repeated MerchantPoint merchantPoints = 4;
+	//兑换获得的通用积分
+	string generalPoints = 5;
+}
+
+//平台积分兑换总平台积分
+message PointsGeneralToTGeneral{
+	//兑换者(商户或者用户)id
+	string id = 1;
+	//兑换者账户类型
+	AccountType accountType = 2;
+	//平台id
+	string platformId = 3;
+    //用掉的通用积分
+    string generalPoints = 4;
+	//兑换获得的总平台通用积分
+	string tgeneralPoints = 5;
+}
+
+//总平台积分兑换平台积分
+message PointsTGeneralToGeneral{
+	//兑换者(商户或者用户)id
+	string id = 1;
+	//兑换者账户类型
+	AccountType accountType = 2;
+    //用掉的总平台通用积分
+    string tgeneralPoints = 3;
+	//兑入平台积分平台id
+	string platformId = 4;
+	//兑换获得的通用积分
+	string generalPoints = 5;
+}
+
+//购买商品，使用何种积分就填对应积分的值，其它不填
+message PointsBuyCommodity {
+	//用户id
+	string userId = 1;
+	//商户id
+	string merchantId = 2;
+	//使用的积分的积分类型
+	PointType pointType = 3;
+	//购买商品使用的商户积分
+	repeated MerchantPoint merchantPoints = 4;
+	//购买商品使用商户所在平台通用积分
+	string general = 5;
+	//购买商品使用总平台通用积分
+	string tgeneral = 6;
+}
+
+//商户结算通用积分
+message PointsSellGeneralPoints {
+	//商户id
+	string merchantId = 1;
+	//积分类型（平台通用积分或者总平台通用积分）
+	PointType pointType = 2;
+	//积分数量
+	string points = 3;
+	//兑换获得的cash数量
+	string cash = 4;
+}
+
+//用户之间转积分
+message PointsTransferPoints {
+	//转出用户id
+	string from = 1;
+	//转入用户id
+	string to = 2;
+	//积分类型
+	PointType pointType = 3;
+	//商户积分
+	UserMPoint userMPoint = 4;
+	//转平台积分的话平台id
+	string platformId = 5;
+	//平台通用积分
+	string general = 6;
+	//总平台通用积分
+	string tgeneral = 7;
+}
+
+//平台给商户发放通用积分
+message PointsGiveMerchantGPoints {
+	//商户id
+	string merchantId = 1;
+	//通用积分类型（平台通用积分或者总平台通用积分）
+	PointType pointType = 2;
+	//积分数量
+	string points = 3;
+}
+
+//账户类型
+enum AccountType {
+  UNK                    = 0;
+  //总平台
+  TPLATFORM = 1;
+  //平台
+  PLATFORM = 2;
+  //商户
+  MERCHANT = 3;
+  //用户
+  USER = 4;
+}
+
+//积分类型
+enum PointType {
+	PUNK = 0;
+	//总平台积分
+	TPOINT = 1;
+	//平台积分
+	PPOINT = 2;
+	//商户积分
+	MPOINT = 3;
+}
+
+//商户积分（商户发行的）
+message MerchantPoint {
+	//积分id
+	string id = 1;
+	//积分数量
+	float quantity = 2;
+	//积分过期时间
+	int64 expiration = 3;
+}
+
+//用户拥有的平台积分
+message UserPPoint {
+	//平台id
+	string platformId = 1;
+	//积分数量
+	float quantity = 2;
+}
+
+//用户拥有的商户积分
+message UserMPoint {
+	//商户id
+	string merchantId = 1;
+	//商户积分
+	repeated MerchantPoint merchantPoints = 2;
+}
+
+//用户
+message User {
+	string id = 1;
+	//总平台通用积分
+	float tgeneral = 2;
+	//平台通用积分
+	repeated UserPPoint pPoints = 3;
+	//商户积分
+	repeated UserMPoint mPoints = 4;
+}
+
+//商户
+message Merchant {
+	//商户id
+	string id = 1;
+	//商户所在平台id
+	string platformId = 2;
+	//现金数量
+	float cash = 3;
+	//所属平台的通用积分
+	float general = 4;
+	//总平台通用积分
+	float tgeneral = 5;
+	//已通过审核的积分
+	repeated MerchantPoint merchantPoints = 6;
+	//备付金比率0 ~ 1
+	float cashRate = 7;
+	//商户发行积分兑换比
+	float pointRate = 8;
+}
+
+//平台
+message Platform {
+	//平台id
+	string id = 1;
+	//平台现金
+	float cash = 2;
+	//总平台通用积分
+	float tgeneral = 3;
+	//平台商户id列表
+	repeated string merchantIds = 4;
+	//备付金比率0 ~ 1
+	float cashRate = 5;
+	//商户发行积分兑换比
+	float pointRate = 6;
+}
+
+//总平台
+message TPlatform {
+	//总平台现金
+	float cash = 1;
+	//平台id列表
+	repeated string platformIds = 2;
+	//用户id列表
+	repeated string userIds = 3;
+}
+
+//交易中的一方(giver, taker)
+message Actor {
+	oneof value{
+		User user = 1;
+		Merchant merchant = 2;
+		Platform platform = 3;
+		TPlatform tplatform = 4;
+	}
+    AccountType ty = 5;
+}
+
+// logs
+message ReceiptCreateTPlatform {
+    TPlatform tplatform = 1;
+}
+
+message ReceiptCreatePlatform {
+    Platform platform = 1;
+	TPlatform tplatform = 2;
+}
+
+message ReceiptCreateMerchant {
+    Merchant merchant = 1;
+	Platform platform = 2;
+}
+
+message ReceiptUserRegister {
+    User user = 1;
+	TPlatform tplatform = 2;
+}
+
+message ReceiptSetCashRate {
+    Actor actor = 1;
+}
+
+message ReceiptSetPointRate {
+    Actor actor = 1;
+}
+
+message ReceiptAccessCash {
+    Actor actor = 1;
+}
+
+message ReceiptCreateMerchantPoint {
+    Merchant merchant = 1;
+}
+
+message ReceiptExpirePoints {
+    Merchant merchant = 1;
+}
+
+message ReceiptGiveUserPoints {
+	//给予者
+    Actor giver = 1;
+	User user = 2;
+}
+
+message ReceiptMerchantToGeneral {
+    Actor actor = 1;
+}
+
+message ReceiptGeneralToTGeneral {
+    Actor actor = 1;
+}
+
+message ReceiptTGeneralToGeneral {
+    Actor actor = 1;
+}
+
+message ReceiptBuyCommodity {
+    Merchant merchant = 1;
+	User user = 2;
+}
+
+message ReceiptSellGeneralPoints {
+	Merchant merchant = 1;
+	Actor actor = 2;
+}
+
+message ReceiptTransferPoints {
+	User from = 1;
+	User to = 2;
+}
+
+message ReceiptGiveMerchantGPoints {
+	Merchant merchant = 1;
+}
+
+
+message Transaction {
+    bytes     execer    = 1;
+    bytes     payload   = 2;
+    Signature signature = 3;
+    int64     fee       = 4;
+    int64     expire    = 5;
+    //随机ID，可以防止payload 相同的时候，交易重复
+    int64 nonce = 6;
+    //对方地址，如果没有对方地址，可以为空
+    string to         = 7;
+    int32  groupCount = 8;
+    bytes  header     = 9;
+    bytes  next       = 10;
+}
+
+
+
+//对于一个交易组中的交易，要么全部成功，要么全部失败
+//这个要好好设计一下
+//最好交易构成一个链条[prevhash].独立的交易构成链条
+//只要这个组中有一个执行是出错的，那么就执行不成功
+//三种签名支持
+// ty = 1 -> secp256k1
+// ty = 2 -> ed25519
+// ty = 3 -> sm2
+// ty = 4 -> OnetimeED25519
+// ty = 5 -> RingBaseonED25519
+message Signature {
+    int32 ty     = 1;
+    bytes pubkey = 2;
+    //当ty为5时，格式应该用RingSignature去解析
+    bytes signature = 3;
+}

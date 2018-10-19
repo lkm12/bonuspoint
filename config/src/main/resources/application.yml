@@ -1,0 +1,49 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: bonuspoint-config-server
+  security:
+    user:
+      # 认证使用的用户名
+      name: admin
+      # 认证使用的密码
+      password: 123456
+  cloud:
+    config:
+      server:
+        git:
+          # git仓库位置
+          uri: https://dev.33.cn/wangtao/bonus-point-cloud.git
+          # 仓库路径下的相对搜索位置
+          search-paths: /**
+          # git仓库的用户名
+          username: wangtao
+          # git仓库的用户密码
+          password: wang5341.
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    # 手动指定IP地址
+    #开发环境
+    #ip-address: 192.168.33.121
+    #演示服务器
+    ip-address: 172.16.100.65
+    # 是否优先使用IP地址作为主机名的标识，默认为false
+    prefer-ip-address: true
+    # 客户端向服务端发送心跳（服务续约任务）的调用时间间隔，默认为30秒
+    lease-renewal-interval-in-seconds: 30
+    # 服务端在收到最后一次心跳之后的等待时间上限（服务时效的时间），默认为90秒
+    lease-expiration-duration-in-seconds: 90
+  client:
+    # 服务注册中心地址，多个地址用 , 隔开
+    service-url:
+      #开发环境
+      #defaultZone: http://admin:123456@${eureka.host:192.168.33.121}:${eureka.port:1111}/eureka/
+      #演示服务器
+      defaultZone: http://admin:123456@${eureka.host:localhost}:${eureka.port:1111}/eureka/
+      #生产环境
+      #defaultZone: http://admin:123456@${eureka.host:47.98.32.123}:${eureka.port:1111}/eureka/
+

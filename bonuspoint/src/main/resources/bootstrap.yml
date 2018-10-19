@@ -1,0 +1,35 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: bp
+  cloud:
+    config:
+      profile: application,application-test,config,redis,regular
+      label: master
+      username: admin
+      password: 123456
+      fail-fast: true
+      discovery:
+        enabled: true
+        serviceId: bonuspoint-config-server
+
+eureka:
+  instance:
+    # 手动指定IP地址
+    #开发环境
+    #ip-address: 192.168.33.121
+    #演示环境
+    ip-address: 172.16.100.65
+  client:
+    service-url:
+      #开发环境
+      #defaultZone: http://admin:123456@${eureka.host:192.168.33.121}:${eureka.port:1111}/eureka/
+      #演示服务器
+      defaultZone: http://admin:123456@${eureka.host:localhost}:${eureka.port:1111}/eureka/
+      #生产环境
+      #defaultZone: http://admin:123456@${eureka.host:47.98.32.123}:${eureka.port:1111}/eureka/
+
+
+
