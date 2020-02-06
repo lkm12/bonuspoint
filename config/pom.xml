@@ -29,8 +29,13 @@
 		</dependency>
 		<!-- 本模块需要进行安全认证，故添加spring-cloud-starter-security依赖 -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-security</artifactId>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-security</artifactId>
+	</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.2.3</version>
 		</dependency>
 	</dependencies>
 
@@ -40,6 +45,16 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!--<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<fork>true</fork>
+					<executable>
+						D:\Program Files\Java\jdk1.8.0_191\bin\javac.exe
+					</executable>
+				</configuration>
+			</plugin>-->
 		</plugins>
 	</build>
 
